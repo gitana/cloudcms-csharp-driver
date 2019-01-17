@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>CloudCMS</RootNamespace>
+
+    <PackageId>CloudCMS</PackageId>
+    <Title>CloudCMS Driver</Title>
+    <Description>C# driver for CloudCMS</Description>
+    <PackageTags>web;cloudcms;cms;content;driver;</PackageTags>
+    <Authors>cloudcms</Authors>
+    <RepositoryUrl>https://github.com/gitana/cloudcms-csharp-driver</RepositoryUrl>
+    <PackageIconUrl>https://github.com/gitana/cloudcms-csharp-driver/icon.png</PackageIconUrl>
+    <PackageLicenseUrl>https://github.com/gitana/cloudcms-csharp-driver/LICENSE</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
+
+</Project>

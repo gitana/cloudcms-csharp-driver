@@ -1,0 +1,7 @@
+.vscode
+bin
+obj
+
+gitana.json
+Program.cs
+*.nupkg
