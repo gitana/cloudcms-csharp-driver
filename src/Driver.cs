@@ -27,6 +27,27 @@ namespace CloudCMS
 
         public async Task<IPlatform> ConnectAsync(ConnectionConfig config)
         {
+            if (config.clientKey == null)
+            {
+                throw new OAuthException("Missing required config property clientKey");
+            }
+            else if (config.clientSecret == null)
+            {
+                throw new OAuthException("Missing required config property clientSecret");
+            }
+            else if (config.username == null)
+            {
+                throw new OAuthException("Missing required config property username");                
+            }
+            else if (config.password == null)
+            {
+                throw new OAuthException("Missing required config property password");                
+            }
+            else if (config.baseURL == null)
+            {
+                throw new OAuthException("Missing required config property baseURL");                
+            }
+            
             this.Config = config;
             await GetTokenAsync();
             return await ReadPlatformAsync();
