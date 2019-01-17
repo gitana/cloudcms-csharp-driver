@@ -6,7 +6,7 @@ using CloudCMS.Nodes;
 
 namespace CloudCMS.Branches
 {
-    interface IBranch : IRepositoryDocument
+    public interface IBranch : IRepositoryDocument
     {
         Task<INode> ReadNodeAsync(string nodeId);
 

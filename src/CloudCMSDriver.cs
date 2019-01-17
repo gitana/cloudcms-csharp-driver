@@ -13,19 +13,53 @@ using CloudCMS.Exceptions;
 
 namespace CloudCMS
 {
-    class Driver
+    public class CloudCMSDriver
     {
+        // Static connection methods
+
+        public static async Task<IPlatform> ConnectAsync(string configPath)
+        {
+            using (StreamReader file = File.OpenText(configPath))
+            using (JsonTextReader reader = new JsonTextReader(file))
+            {
+                JObject json = (JObject)JToken.ReadFrom(reader);
+                ConnectionConfig config = json.ToObject<ConnectionConfig>();
+                
+                return await ConnectAsync(config);
+            }
+        }
+
+        public static async Task<IPlatform> ConnectAsync(IDictionary<string, string> configDict)
+        {
+            JObject configObject = JObject.FromObject(configDict);
+            return await ConnectAsync(configObject);
+        }
+
+        public static async Task<IPlatform> ConnectAsync(JObject configObject)
+        {
+            ConnectionConfig config = configObject.ToObject<ConnectionConfig>();
+            return await ConnectAsync(config);
+        }
+
+        public static async Task<IPlatform> ConnectAsync(ConnectionConfig config)
+        {
+            CloudCMSDriver driver = new CloudCMSDriver();
+            return await driver.doConnectAsync(config);
+        }
+
+        // Instance methods
+
         private static string TOKEN_URI = "/oauth/token";
 
         private ConnectionConfig Config;
-        private Token token;
+        private OAuthToken token;
 
-        public Driver()
+        protected CloudCMSDriver()
         {
             
         }
 
-        public async Task<IPlatform> ConnectAsync(ConnectionConfig config)
+        private async Task<IPlatform> doConnectAsync(ConnectionConfig config)
         {
             if (config.clientKey == null)
             {
@@ -47,7 +81,7 @@ namespace CloudCMS
             {
                 throw new OAuthException("Missing required config property baseURL");                
             }
-            
+
             this.Config = config;
             await GetTokenAsync();
             return await ReadPlatformAsync();
@@ -152,7 +186,7 @@ namespace CloudCMS
                 HttpResponseMessage response = await client.PostAsync(Config.baseURL + TOKEN_URI, requestBody);
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                token = JsonConvert.DeserializeObject<Token>(responseBody);
+                token = JsonConvert.DeserializeObject<OAuthToken>(responseBody);
                 token.expireTime = DateTime.UtcNow.AddSeconds(token.expires_in);
             }
         }
@@ -175,7 +209,7 @@ namespace CloudCMS
                 HttpResponseMessage response = await client.PostAsync(Config.baseURL + TOKEN_URI, requestBody);
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                token = JsonConvert.DeserializeObject<Token>(responseBody);
+                token = JsonConvert.DeserializeObject<OAuthToken>(responseBody);
                 token.expireTime = DateTime.UtcNow.AddSeconds(token.expires_in);
             }
         }

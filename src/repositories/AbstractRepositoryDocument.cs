@@ -3,7 +3,7 @@ using CloudCMS.Documents;
 
 namespace CloudCMS.Repositories
 {
-    abstract class AbstractRepositoryDocument : AbstractDocument,
+    public abstract class AbstractRepositoryDocument : AbstractDocument,
                                                 IRepositoryDocument
     {
         public IRepository Repository { get; }

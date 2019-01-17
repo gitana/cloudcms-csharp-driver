@@ -3,7 +3,7 @@ using System.Net.Http;
 
 namespace CloudCMS.Exceptions
 {
-    class CloudCMSRequestException : SystemException
+    public class CloudCMSRequestException : SystemException
     {
         public CloudCMSRequestException(string message) : base(message)
         {

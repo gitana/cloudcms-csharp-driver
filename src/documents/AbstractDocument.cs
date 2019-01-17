@@ -4,7 +4,7 @@ using System.Net.Http;
 
 namespace CloudCMS.Documents
 {
-    abstract class AbstractDocument : IDocument
+    public abstract class AbstractDocument : IDocument
     {
         public string Id { get; set; }
 
@@ -12,9 +12,9 @@ namespace CloudCMS.Documents
 
         public abstract string URI { get; }
 
-        public Driver Driver { get; }
+        public CloudCMSDriver Driver { get; }
 
-        protected AbstractDocument(Driver driver, JObject obj)
+        protected AbstractDocument(CloudCMSDriver driver, JObject obj)
         {
             this.Driver = driver;
             this.Id = obj.GetValue("_doc").ToString();

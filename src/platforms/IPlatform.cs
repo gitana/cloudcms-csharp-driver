@@ -5,7 +5,7 @@ using CloudCMS.Documents;
 
 namespace CloudCMS.Platforms
 {
-    interface IPlatform : IDocument
+    public interface IPlatform : IDocument
     {
         Task<List<IRepository>> ListRepositoriesAsync();
 

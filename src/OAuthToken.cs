@@ -2,7 +2,7 @@ using System;
 
 namespace CloudCMS
 {
-    class Token
+    public class OAuthToken
     {
         public string access_token { get; set; }
         public string refresh_token { get; set; }

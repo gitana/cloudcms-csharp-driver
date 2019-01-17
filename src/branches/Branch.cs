@@ -8,7 +8,7 @@ using System.Net.Http;
 
 namespace CloudCMS.Branches
 {
-    class Branch : AbstractRepositoryDocument,
+    public class Branch : AbstractRepositoryDocument,
                     IBranch
     {
         public Branch(IRepository repository, JObject obj) : base(repository, obj)

@@ -7,7 +7,7 @@ The [Cloud CMS](https://www.cloudcms.com/) C# driver is a .NET core client libra
 Command Line:
 
 ````
-dotnet add cloudcms
+dotnet add package cloudcms
 ````
 
 Visual Studio:
@@ -18,7 +18,7 @@ Install-Package cloudcms
 
 ## Connecting to Cloud CMS
 
-To connect to Cloud CMS, use the static `CloudCMS.ConnectAsync` method. This takes either a file path to a `gitana.json` file, a JObject json object, dictionary, or ConnectionObject.
+To connect to Cloud CMS, use the static `CloudCMSDriver.ConnectAsync` method. This takes either a file path to a `gitana.json` file, a JObject json object, dictionary, or ConnectionObject.
 
 The required API key properties for this are:
 
@@ -32,16 +32,16 @@ Connection examples:
 
 ````csharp
 string path = "gitana.json";
-IPlatform platform1 = await CloudCMS.ConnectAsync(path);
+IPlatform platform1 = await CloudCMSDriver.ConnectAsync(path);
 
 JObject configObj = ...;
-IPlatform platform2 = await CloudCMS.ConnectAsync(configObj);
+IPlatform platform2 = await CloudCMSDriver.ConnectAsync(configObj);
 
 IDictionary<string, string> configDict = ...;
-IPlatform platform3 = await CloudCMS.ConnectAsync(configDict);
+IPlatform platform3 = await CloudCMSDriver.ConnectAsync(configDict);
 
 ConnectionConfig config = ...;
-IPlatform platform4 = await CloudCMS.ConnectAsync(config);
+IPlatform platform4 = await CloudCMSDriver.ConnectAsync(config);
 ````
 
 ## Examples
@@ -51,7 +51,7 @@ Below are some examples of how you might use this driver:
 ````csharp
 // Connect to Cloud CMS
 string path = "gitana.json";
-IPlatform platform = await CloudCMS.ConnectAsync(path);
+IPlatform platform = await CloudCMSDriver.ConnectAsync(path);
 
 // Read repository
 IRepository repository = await platform.ReadRepositoryAsync("<repositoryId>");

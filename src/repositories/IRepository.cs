@@ -5,7 +5,7 @@ using CloudCMS.Documents;
 
 namespace CloudCMS.Repositories
 {
-    interface IRepository : IDocument
+    public interface IRepository : IDocument
     {
         Task<List<IBranch>> ListBranchesAsync();
 

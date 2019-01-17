@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 
 namespace CloudCMS.Documents
 {
-    interface IDocument
+    public interface IDocument
     {
         string Id { get; set; }
 
         JObject Data { get; set; }
 
-        Driver Driver { get; }
+        CloudCMSDriver Driver { get; }
 
         string URI { get; }
 

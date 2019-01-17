@@ -6,7 +6,7 @@ using CloudCMS.Branches;
 
 namespace CloudCMS.Nodes
 {
-    class Node : AbstractRepositoryDocument,
+    public class Node : AbstractRepositoryDocument,
                 INode
     {
         public IBranch Branch { get; }

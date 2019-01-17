@@ -11,7 +11,7 @@ namespace CloudCMS.Repositories
     {
         public string PlatformId { get; }
 
-        public Repository(Driver driver, JObject obj) : base(driver, obj)
+        public Repository(CloudCMSDriver driver, JObject obj) : base(driver, obj)
         {
             this.PlatformId = obj.SelectToken("platformId").ToString();
         }

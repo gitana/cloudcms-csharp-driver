@@ -4,7 +4,7 @@ using CloudCMS.Branches;
 
 namespace CloudCMS.Nodes
 {
-    class NodeUtil
+    public class NodeUtil
     {
         public static List<INode> NodeList(JArray nodeArray, IBranch branch)
         {

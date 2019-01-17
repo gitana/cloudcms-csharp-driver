@@ -1,6 +1,6 @@
 namespace CloudCMS
 {
-    class ConnectionConfig
+    public class ConnectionConfig
     {
         public string clientKey { get; set; }
         public string clientSecret { get; set; }

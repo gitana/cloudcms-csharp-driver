@@ -3,7 +3,7 @@ using CloudCMS.Branches;
 
 namespace CloudCMS.Nodes
 {
-    interface INode : IRepositoryDocument
+    public interface INode : IRepositoryDocument
     {
         IBranch Branch { get; }
 

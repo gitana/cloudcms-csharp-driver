@@ -6,12 +6,12 @@
     <RootNamespace>CloudCMS</RootNamespace>
 
     <PackageId>cloudcms</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.2</PackageVersion>
     <Title>CloudCMS Driver</Title>
     <Description>C# .NET driver for CloudCMS</Description>
     <Summary>C# .NET driver for CloudCMS</Summary>
     <PackageTags>cloudcms;cms;</PackageTags>
-    <Authors>cloudcms</Authors>
+    <Authors>Michael Whitman</Authors>
     <RepositoryUrl>https://github.com/gitana/cloudcms-csharp-driver</RepositoryUrl>
     <PackageIconUrl>https://github.com/gitana/cloudcms-csharp-driver/blob/master/icon.png?raw=true</PackageIconUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
