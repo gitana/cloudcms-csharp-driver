@@ -107,5 +107,5 @@ List<INode> findNodes = await branch.FindNodesAsync(find, pagination);
 
 ## Support
 
-For information or questions about the Java Driver, please contact Cloud CMS
+For information or questions about the C# Driver, please contact Cloud CMS
 at [support@cloudcms.com](mailto:support@cloudcms.com).
