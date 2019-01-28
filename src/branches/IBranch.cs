@@ -8,12 +8,14 @@ namespace CloudCMS.Branches
 {
     public interface IBranch : IRepositoryDocument
     {
+        bool IsMaster();
+
         Task<INode> ReadNodeAsync(string nodeId);
 
         Task<List<INode>> QueryNodesAsync(JObject query, JObject pagination = null);
 
         Task<List<INode>> FindNodesAsync(JObject config, JObject pagination = null);
 
-        Task<string> CreateNodeAsync(JObject nodeObj, JObject options = null);
+        Task<INode> CreateNodeAsync(JObject nodeObj, JObject options = null);
     }
 }

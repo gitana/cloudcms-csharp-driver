@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using CloudCMS.Repositories;
 using CloudCMS.Nodes;
+using CloudCMS.Exceptions;
 using System.Net.Http;
 
 namespace CloudCMS.Branches
@@ -24,12 +25,25 @@ namespace CloudCMS.Branches
             }
         }
 
+        public bool IsMaster()
+        {
+            return Data["type"].ToString().Equals("MASTER");
+        }
+
         public async Task<INode> ReadNodeAsync(string nodeId)
         {
             string uri = this.URI + "/nodes/" + nodeId;
-            JObject response = await Driver.GetAsync(uri);
+            INode node = null;
+            try
+            {
+                JObject response = await Driver.GetAsync(uri);
+                node = new Node(this, response);
+            }
+            catch (CloudCMSRequestException)
+            {
+                node = null;
+            }
 
-            INode node = new Node(this, response);
             return node;
         }
 
@@ -65,14 +79,13 @@ namespace CloudCMS.Branches
             HttpContent content = new StringContent(config.ToString());
 
             JObject response = await Driver.PostAsync(uri, queryParams, content);
-            System.Console.WriteLine(response);
 
             JArray nodeArray = (JArray) response.SelectToken("rows");
             List<INode> nodes = NodeUtil.NodeList(nodeArray, this);
             return nodes;         
         }
 
-        public async Task<string> CreateNodeAsync(JObject nodeObj, JObject options = null)
+        public async Task<INode> CreateNodeAsync(JObject nodeObj, JObject options = null)
         {
             string uri = this.URI + "/nodes";
 
@@ -126,7 +139,9 @@ namespace CloudCMS.Branches
             HttpContent content = new StringContent(nodeObj.ToString());
 
             JObject response = await Driver.PostAsync(uri, queryParams, content);
-            return response.SelectToken("_doc").ToString();
+            string nodeId = response.SelectToken("_doc").ToString();
+
+            return await ReadNodeAsync(nodeId);
         }
     }
 }

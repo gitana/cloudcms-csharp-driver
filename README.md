@@ -74,7 +74,7 @@ JObject obj = new JObject(
     new JProperty("title", "Twelfth Night"),
     new JProperty("description", "An old play")
 );
-string newNodeId = await branch.CreateNodeAsync(obj);
+INode newNode = await branch.CreateNodeAsync(obj);
 
 // Query nodes
 JObject query = new JObject(
@@ -95,6 +95,13 @@ JObject find = new JObject(
     )
 );
 List<INode> findNodes = await branch.FindNodesAsync(find, pagination);
+````
+
+## Tests
+To run the tests for this driver, ensure you have your `gitana.json` file in the driver directory, then run:
+
+````
+dotnet test
 ````
 
 ## Resources

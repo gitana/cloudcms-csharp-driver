@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using CloudCMS.Repositories;
 using CloudCMS.Documents;
 
@@ -10,5 +11,7 @@ namespace CloudCMS.Platforms
         Task<List<IRepository>> ListRepositoriesAsync();
 
         Task<IRepository> ReadRepositoryAsync(string repositoryId);
+
+        Task<IRepository> CreateRepositoryAsync(JObject obj = null);
     }
 }

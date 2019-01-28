@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using CloudCMS.Repositories;
 using CloudCMS.Documents;
+using CloudCMS.Exceptions;
+using System.Net.Http;
 
 namespace CloudCMS.Platforms
 {
@@ -42,10 +44,33 @@ namespace CloudCMS.Platforms
         public async Task<IRepository> ReadRepositoryAsync(string repositoryId)
         {
             string uri = this.URI + "/repositories/" + repositoryId;
-            JObject response = await Driver.GetAsync(uri);
+            IRepository repository = null;
+            try
+            {
+                JObject response = await Driver.GetAsync(uri);
+                repository = new Repository(Driver, response);
 
-            IRepository repository = new Repository(Driver, response);
+            }
+            catch (CloudCMSRequestException)
+            {
+                repository = null;
+            }
+
             return repository;
+        }
+
+        public async Task<IRepository> CreateRepositoryAsync(JObject obj = null)
+        {
+            string uri = this.URI + "/repositories/";
+            if (obj == null)
+            {
+                obj = new JObject();
+            }
+            HttpContent content = new StringContent(obj.ToString());
+            JObject repsonse = await Driver.PostAsync(uri, null, content);
+
+            string repositoryId = repsonse["_doc"].ToString();
+            return await ReadRepositoryAsync(repositoryId);
         }
     }
 }

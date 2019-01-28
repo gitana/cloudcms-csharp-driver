@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using CloudCMS.Branches;
 using CloudCMS.Documents;
+using CloudCMS.Exceptions;
 
 namespace CloudCMS.Repositories
 {
@@ -44,9 +45,16 @@ namespace CloudCMS.Repositories
         public async Task<IBranch> ReadBranchAsync(string branchId)
         {
             string uri = this.URI + "/branches/" + branchId;
-            JObject response = await Driver.GetAsync(uri);
-
-            IBranch branch = new Branch(this, response);
+            IBranch branch = null;
+            try
+            {
+                JObject response = await Driver.GetAsync(uri);
+                branch = new Branch(this, response);
+            }
+            catch (CloudCMSRequestException)
+            {
+                branch = null;
+            }
             return branch;
         }
     }
