@@ -6,7 +6,7 @@
     <RootNamespace>CloudCMS</RootNamespace>
 
     <PackageId>cloudcms</PackageId>
-    <PackageVersion>1.0.2</PackageVersion>
+    <PackageVersion>1.0.3</PackageVersion>
     <Title>CloudCMS Driver</Title>
     <Description>C# .NET driver for CloudCMS</Description>
     <Summary>C# .NET driver for CloudCMS</Summary>
@@ -15,12 +15,13 @@
     <RepositoryUrl>https://github.com/gitana/cloudcms-csharp-driver</RepositoryUrl>
     <PackageIconUrl>https://github.com/gitana/cloudcms-csharp-driver/blob/master/icon.png?raw=true</PackageIconUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <None Update="gitana.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Include="LICENSE" Pack="true" PackagePath="" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
