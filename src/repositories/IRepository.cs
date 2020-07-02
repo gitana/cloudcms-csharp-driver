@@ -10,5 +10,6 @@ namespace CloudCMS.Repositories
         Task<List<IBranch>> ListBranchesAsync();
 
         Task<IBranch> ReadBranchAsync(string branchId);
+        Task<IBranch> MasterAsync();
     }
 }

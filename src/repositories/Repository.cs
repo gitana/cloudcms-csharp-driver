@@ -57,5 +57,10 @@ namespace CloudCMS.Repositories
             }
             return branch;
         }
+
+        public Task<IBranch> MasterAsync()
+        {
+            return ReadBranchAsync("master");
+        }
     }
 }
