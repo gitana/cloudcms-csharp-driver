@@ -4,7 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
-using CloudCMS.Repositories;
+using CloudCMS;
 
 namespace CloudCMS.Tests
 {
@@ -17,10 +17,13 @@ namespace CloudCMS.Tests
 
         private async Task SetupAsync()
         {
+            JObject obj = new JObject();
+            obj["title"] = "C# Driver Test Repository";
             Repository = await Platform.CreateRepositoryAsync();
         }
 
-        public new void Dispose()
+        
+        public override void Dispose()
         {
             Repository.DeleteAsync().Wait();
         }

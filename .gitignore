@@ -5,3 +5,5 @@ obj
 gitana.json
 Program.cs
 *.nupkg
+
+*.DotSettings.user

@@ -1,21 +1,26 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using CloudCMS.Repositories;
-using CloudCMS.Nodes;
+using CloudCMS;
 
-namespace CloudCMS.Branches
+namespace CloudCMS
 {
     public interface IBranch : IRepositoryDocument
     {
         bool IsMaster();
 
-        Task<INode> ReadNodeAsync(string nodeId);
+        Task<IBaseNode> ReadNodeAsync(string nodeId);
 
-        Task<List<INode>> QueryNodesAsync(JObject query, JObject pagination = null);
+        Task<List<IBaseNode>> QueryNodesAsync(JObject query, JObject pagination = null);
 
-        Task<List<INode>> FindNodesAsync(JObject config, JObject pagination = null);
+        Task<List<IBaseNode>> FindNodesAsync(JObject config, JObject pagination = null);
 
-        Task<INode> CreateNodeAsync(JObject nodeObj, JObject options = null);
+        Task<IBaseNode> CreateNodeAsync();
+        Task<IBaseNode> CreateNodeAsync(JObject nodeObj, JObject options = null);
+
+        Task<INode> RootNodeAsync();
+        
+        // Definitions
+        
     }
 }

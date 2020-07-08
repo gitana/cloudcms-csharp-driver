@@ -2,7 +2,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
 
-namespace CloudCMS.Documents
+namespace CloudCMS
 {
     public abstract class AbstractDocument : IDocument
     {
@@ -37,5 +37,8 @@ namespace CloudCMS.Documents
             HttpContent content = new StringContent(Data.ToString());
             await Driver.PutAsync(URI, body: content);
         }
+
+        public abstract string TypeId { get; }
+        public abstract Reference Ref { get; }
     }
 }

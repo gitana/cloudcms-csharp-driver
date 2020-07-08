@@ -1,7 +1,7 @@
-using CloudCMS.Exceptions;
+using CloudCMS;
 using Newtonsoft.Json.Linq;
 
-namespace CloudCMS.support
+namespace CloudCMS
 {
     public class QName
     {

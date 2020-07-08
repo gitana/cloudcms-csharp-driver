@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using CloudCMS.Branches;
-using CloudCMS.support;
+using CloudCMS;
 using Newtonsoft.Json.Linq;
 using Xunit.Sdk;
 
-namespace CloudCMS.Nodes
+namespace CloudCMS
 {
     public class Association : BaseNode, IAssociation
     {
@@ -51,14 +50,22 @@ namespace CloudCMS.Nodes
             }
         }
 
-        public Task<INode> ReadSourceNodeAsync()
+        public async Task<INode> ReadSourceNodeAsync()
         {
-            return this.Branch.ReadNodeAsync(this.SourceNodeId);
+            return (INode)(await this.Branch.ReadNodeAsync(this.SourceNodeId));
         }
         
-        public Task<INode> ReadTargetNodeAsync()
+        public async Task<INode> ReadTargetNodeAsync()
         {
-            return this.Branch.ReadNodeAsync(this.TargetNodeId);
+            return (INode)(await this.Branch.ReadNodeAsync(this.TargetNodeId));
+        }
+
+        public override string TypeId
+        {
+            get
+            {
+                return "association";
+            }
         }
     }
 }

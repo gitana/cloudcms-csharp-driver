@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using CloudCMS.Branches;
-using CloudCMS.Nodes;
-using CloudCMS.support;
+using CloudCMS;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -21,20 +19,22 @@ namespace CloudCMS.Tests
             JObject nodeObj1 = new JObject(
                 new JProperty("title", "Node1")
             );
-            INode node1 = await master.CreateNodeAsync(nodeObj1);
+            INode node1 = (INode) await master.CreateNodeAsync(nodeObj1);
             
             JObject nodeObj2 = new JObject(
                 new JProperty("title", "Node1")
             );
-            INode node2 = await master.CreateNodeAsync(nodeObj2);
+            INode node2 = (INode) await master.CreateNodeAsync(nodeObj2);
             
             JObject nodeObj3 = new JObject(
                 new JProperty("title", "Node1")
             );
-            INode node3 = await master.CreateNodeAsync(nodeObj3);
+            INode node3 = (INode) await master.CreateNodeAsync(nodeObj3);
             
             // Associate node 1 directed to node 2 with a:child
             IAssociation association1 = await node1.AssociateAsync(node2, QName.create("a:child"));
+            string expectedRef = "association://" + association1.PlatformId + "/" + association1.RepositoryId + "/" + association1.BranchId + "/" + association1.Id;
+            Assert.Equal(expectedRef, association1.Ref.Ref);
             Assert.Equal(Directionality.DIRECTED, association1.Directionality);
             Assert.Equal(node1.Id ,association1.SourceNodeId);
             Assert.Equal(node2.Id, association1.TargetNodeId);

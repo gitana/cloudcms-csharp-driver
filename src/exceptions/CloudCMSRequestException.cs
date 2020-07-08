@@ -1,6 +1,6 @@
 using System.Net.Http;
 
-namespace CloudCMS.Exceptions
+namespace CloudCMS
 {
     public class CloudCMSRequestException : CloudCMSException
     {

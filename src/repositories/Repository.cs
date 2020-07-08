@@ -1,11 +1,9 @@
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using CloudCMS.Branches;
-using CloudCMS.Documents;
-using CloudCMS.Exceptions;
+using CloudCMS;
 
-namespace CloudCMS.Repositories
+namespace CloudCMS
 {
     class Repository : AbstractDocument,
                         IRepository
@@ -61,6 +59,23 @@ namespace CloudCMS.Repositories
         public Task<IBranch> MasterAsync()
         {
             return ReadBranchAsync("master");
+        }
+
+
+        public override string TypeId
+        {
+            get
+            {
+                return "repository";
+            }
+        }
+
+        public override Reference Ref
+        {
+            get
+            {
+                return Reference.create(TypeId, PlatformId, Id);
+            }
         }
     }
 }

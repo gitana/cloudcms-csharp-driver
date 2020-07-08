@@ -1,4 +1,4 @@
-namespace CloudCMS.support
+namespace CloudCMS
 {
     public enum Direction
     {

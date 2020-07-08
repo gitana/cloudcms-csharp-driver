@@ -2,12 +2,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using CloudCMS.Repositories;
-using CloudCMS.Nodes;
-using CloudCMS.Exceptions;
+using CloudCMS;
 using System.Net.Http;
 
-namespace CloudCMS.Branches
+namespace CloudCMS
 {
     public class Branch : AbstractRepositoryDocument,
                     IBranch
@@ -25,15 +23,31 @@ namespace CloudCMS.Branches
             }
         }
 
+        public override string TypeId
+        {
+            get
+            {
+                return "branch";
+            }
+        }
+
+        public override Reference Ref
+        {
+            get
+            {
+                return Reference.create(TypeId, Repository.PlatformId, RepositoryId, Id);
+            }
+        }
+
         public bool IsMaster()
         {
             return Data["type"].ToString().Equals("MASTER");
         }
 
-        public async Task<INode> ReadNodeAsync(string nodeId)
+        public async Task<IBaseNode> ReadNodeAsync(string nodeId)
         {
             string uri = this.URI + "/nodes/" + nodeId;
-            INode node = null;
+            IBaseNode node = null;
             try
             {
                 JObject response = await Driver.GetAsync(uri);
@@ -47,7 +61,7 @@ namespace CloudCMS.Branches
             return node;
         }
 
-        public async Task<List<INode>> QueryNodesAsync(JObject query, JObject pagination = null)
+        public async Task<List<IBaseNode>> QueryNodesAsync(JObject query, JObject pagination = null)
         {
             string uri = this.URI + "/nodes/query";
             
@@ -62,11 +76,11 @@ namespace CloudCMS.Branches
             JObject response = await Driver.PostAsync(uri, queryParams, content);
 
             JArray nodeArray = (JArray) response.SelectToken("rows");
-            List<INode> nodes = NodeUtil.NodeList(nodeArray, this);
+            List<IBaseNode> nodes = NodeUtil.NodeList(nodeArray, this);
             return nodes;
         }
 
-        public async Task<List<INode>> FindNodesAsync(JObject config, JObject pagination = null)
+        public async Task<List<IBaseNode>> FindNodesAsync(JObject config, JObject pagination = null)
         {
             string uri = this.URI + "/nodes/find";
 
@@ -81,11 +95,16 @@ namespace CloudCMS.Branches
             JObject response = await Driver.PostAsync(uri, queryParams, content);
 
             JArray nodeArray = (JArray) response.SelectToken("rows");
-            List<INode> nodes = NodeUtil.NodeList(nodeArray, this);
+            List<IBaseNode> nodes = NodeUtil.NodeList(nodeArray, this);
             return nodes;         
         }
 
-        public async Task<INode> CreateNodeAsync(JObject nodeObj, JObject options = null)
+        public Task<IBaseNode> CreateNodeAsync()
+        {
+            return CreateNodeAsync(new JObject());
+        }
+
+        public async Task<IBaseNode> CreateNodeAsync(JObject nodeObj, JObject options = null)
         {
             string uri = this.URI + "/nodes";
 
@@ -142,6 +161,11 @@ namespace CloudCMS.Branches
             string nodeId = response.SelectToken("_doc").ToString();
 
             return await ReadNodeAsync(nodeId);
+        }
+
+        public async Task<INode> RootNodeAsync()
+        {
+            return (INode) await ReadNodeAsync("root");
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace CloudCMS.Exceptions
+namespace CloudCMS
 {
     public class InvalidQNameException : CloudCMSException
     {

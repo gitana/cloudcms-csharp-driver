@@ -1,6 +1,6 @@
 using System;
 
-namespace CloudCMS.Exceptions
+namespace CloudCMS
 {
     public class CloudCMSException : SystemException
     {

@@ -1,12 +1,11 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using CloudCMS.Repositories;
-using CloudCMS.Documents;
+using CloudCMS;
 
-namespace CloudCMS.Platforms
+namespace CloudCMS
 {
-    public interface IPlatform : IDocument
+    public interface IPlatform : IDatastore, IReferenceable
     {
         Task<List<IRepository>> ListRepositoriesAsync();
 

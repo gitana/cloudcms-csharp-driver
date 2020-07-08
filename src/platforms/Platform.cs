@@ -1,12 +1,10 @@
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using CloudCMS.Repositories;
-using CloudCMS.Documents;
-using CloudCMS.Exceptions;
+using CloudCMS;
 using System.Net.Http;
 
-namespace CloudCMS.Platforms
+namespace CloudCMS
 {
     class Platform : AbstractDocument,
                      IPlatform
@@ -71,6 +69,22 @@ namespace CloudCMS.Platforms
 
             string repositoryId = repsonse["_doc"].ToString();
             return await ReadRepositoryAsync(repositoryId);
+        }
+
+        public override string TypeId
+        {
+            get
+            {
+                return "platform";
+            }
+        }
+
+        public override Reference Ref
+        {
+            get
+            {
+                return Reference.create(TypeId, Id);
+            }
         }
     }
 }

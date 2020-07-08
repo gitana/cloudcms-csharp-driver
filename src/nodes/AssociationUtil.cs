@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using CloudCMS.Branches;
+using CloudCMS;
 using Newtonsoft.Json.Linq;
 
-namespace CloudCMS.Nodes
+namespace CloudCMS
 {
     public class AssociationUtil
     {

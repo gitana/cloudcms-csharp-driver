@@ -1,20 +1,23 @@
 using Newtonsoft.Json.Linq;
-using CloudCMS.Documents;
+using CloudCMS;
 
-namespace CloudCMS.Repositories
+namespace CloudCMS
 {
     public abstract class AbstractRepositoryDocument : AbstractDocument,
                                                 IRepositoryDocument
     {
         public IRepository Repository { get; }
+        public string RepositoryId { get; }
+        
+        public string PlatformId { get; }
 
-        public string RepositoryId { get; 
-        }
         protected AbstractRepositoryDocument(IRepository repository, JObject obj)
             : base(repository.Driver, obj)
         {
             this.Repository = repository;
             this.RepositoryId = repository.Id;
+
+            this.PlatformId = repository.PlatformId;
         }
     }
 }

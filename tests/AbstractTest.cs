@@ -4,7 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
-using CloudCMS.Platforms;
+using CloudCMS;
 
 namespace CloudCMS.Tests
 {
@@ -15,11 +15,10 @@ namespace CloudCMS.Tests
             SetupAsync().Wait();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
-
+            
         }
-
         private async Task SetupAsync()
         {
             using (StreamReader file = File.OpenText("gitana.json"))

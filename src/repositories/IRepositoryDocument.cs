@@ -1,11 +1,14 @@
-using CloudCMS.Documents;
+using CloudCMS;
 
-namespace CloudCMS.Repositories
+namespace CloudCMS
 {
     public interface IRepositoryDocument : IDocument
     {
         IRepository Repository { get; }
 
         string RepositoryId { get; }
+        
+        
+        string PlatformId { get; }
     }
 }

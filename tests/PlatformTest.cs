@@ -14,6 +14,7 @@ namespace CloudCMS.Tests
         {
             Assert.Equal("Root Platform", Fixture.Platform.Data.GetValue("title"));
             Assert.Equal("", Fixture.Platform.URI);
+            Assert.StartsWith("platform://", Fixture.Platform.Ref.Ref);
         }
     }
 }

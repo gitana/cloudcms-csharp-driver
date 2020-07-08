@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using CloudCMS.support;
+using CloudCMS;
 
-namespace CloudCMS.Nodes
+namespace CloudCMS
 {
     public interface IAssociation : IBaseNode
     {

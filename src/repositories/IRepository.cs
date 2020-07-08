@@ -1,12 +1,13 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using CloudCMS.Branches;
-using CloudCMS.Documents;
+using CloudCMS;
 
-namespace CloudCMS.Repositories
+namespace CloudCMS
 {
-    public interface IRepository : IDocument
+    public interface IRepository : IDatastore, IReferenceable
     {
+        public string PlatformId { get; }
+
         Task<List<IBranch>> ListBranchesAsync();
 
         Task<IBranch> ReadBranchAsync(string branchId);

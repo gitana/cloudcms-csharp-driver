@@ -1,7 +1,6 @@
 using Xunit;
 using System.Collections.Generic;
-using CloudCMS.Repositories;
-using CloudCMS.Branches;
+using CloudCMS;
 
 namespace CloudCMS.Tests
 {
@@ -20,8 +19,10 @@ namespace CloudCMS.Tests
             Assert.True(branches.Count > 0);
 
             IBranch branch = await repository.ReadBranchAsync("master");
+            string expectedRef = "branch://" + repository.PlatformId + "/" + repository.Id + "/" + branch.Id;
             Assert.Equal("/repositories/" + repository.Id + "/branches/" + branch.Id, branch.URI);
             Assert.True(branch.IsMaster());
+            Assert.Equal(expectedRef, branch.Ref.Ref);
 
             branch = await repository.ReadBranchAsync("I'm not real");
             Assert.Null(branch);

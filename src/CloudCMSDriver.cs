@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using CloudCMS.Platforms;
-using CloudCMS.Exceptions;
+using CloudCMS;
 
 namespace CloudCMS
 {
@@ -118,30 +117,82 @@ namespace CloudCMS
             return await RequestAsync(uri, method, queryParams);
         }
 
+        public async Task<Stream> DownloadAsync(string uri)
+        {
+            HttpResponseMessage response = await _requestAsync(uri, HttpMethod.Get);
+            return await response.Content.ReadAsStreamAsync();
+        }
+        
+        public async Task<byte[]> DownloadBytesAsync(string uri)
+        {
+            HttpResponseMessage response = await _requestAsync(uri, HttpMethod.Get);
+            return await response.Content.ReadAsByteArrayAsync();
+        }
+
+        public async Task UploadAsync(string uri, byte[] bytes, string mimetype, IDictionary<string, string> paramMap=null)
+        {
+            paramMap ??= new Dictionary<string, string>();
+            HttpContent content = GenerateUploadContent(bytes, mimetype);
+            await _requestAsync(uri, HttpMethod.Post, paramMap, content);
+        }
+
+        public async Task UploadAsync(string uri, Stream stream, string mimetype, IDictionary<string, string> paramMap=null)
+        {
+            paramMap ??= new Dictionary<string, string>();
+            HttpContent content = GenerateUploadContent(stream, mimetype);
+            await _requestAsync(uri, HttpMethod.Post, paramMap, content);
+        }
+
+        public async Task UploadAsync(string uri, IDictionary<string, string> paramMap, IDictionary<string, AttachmentContent> payloads)
+        {
+            HttpContent content = GenerateUploadContent(payloads);
+            await _requestAsync(uri, HttpMethod.Post, paramMap, content);
+        }
+        
+        private HttpContent GenerateUploadContent(byte[] bytes, string mimetype)
+        {
+            return new AttachmentContent(bytes, mimetype);
+        }
+        
+        private HttpContent GenerateUploadContent(Stream stream, string mimetype)
+        {
+            return new AttachmentContent(stream, mimetype);
+
+        }
+
+        private HttpContent GenerateUploadContent(IDictionary<string, AttachmentContent> payloads)
+        {
+            MultipartFormDataContent multi = new MultipartFormDataContent();
+            foreach (var kv in payloads)
+            {
+                string filename = kv.Key;
+                AttachmentContent payload = kv.Value;
+                
+                multi.Add(payload, filename, filename);
+            }
+
+            return multi;
+        }
+
+
         public async Task<JObject> RequestAsync(string uri, HttpMethod method, IDictionary<string, string> queryParams = null, HttpContent body = null)
+        {
+            HttpResponseMessage response = await _requestAsync(uri, method, queryParams, body);
+            string responseString = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new CloudCMSRequestException(responseString);
+            }
+
+            return JObject.Parse(responseString);
+        }
+
+        private async Task<HttpResponseMessage> _requestAsync(string uri, HttpMethod method, IDictionary<string, string> queryParams = null, HttpContent body = null)
         {
             using (HttpClient client = new HttpClient())
             {
-                var uriBuilder = new UriBuilder(Config.baseURL + uri);
+                var url = BuildUrl(uri, queryParams);
 
-                var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-                // Add "full" parameter unless already set
-                if (query["full"] == null)
-                {
-                    query["full"] = "true";
-                }
-                // Add all params to query string
-                if (queryParams != null)
-                {
-                    foreach(var kvp in queryParams)
-                    {
-                        query[kvp.Key] = kvp.Value;
-                    }
-                }
-                uriBuilder.Query = query.ToString();
-
-                string url = uriBuilder.ToString();
-            
                 HttpRequestMessage request =  new HttpRequestMessage(method, url);
                 if (body != null)
                 {
@@ -157,15 +208,35 @@ namespace CloudCMS
                 client.DefaultRequestHeaders.Authorization = auth;
 
                 HttpResponseMessage response = await client.SendAsync(request);
-                string responseString = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new CloudCMSRequestException(responseString);
-                }
-
-                return JObject.Parse(responseString);
+                return response;
             }
         }
+
+        private string BuildUrl(string uri, IDictionary<string, string> queryParams)
+        {
+            var uriBuilder = new UriBuilder(Config.baseURL + uri);
+
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            // Add "full" parameter unless already set
+            if (query["full"] == null)
+            {
+                query["full"] = "true";
+            }
+
+            // Add all params to query string
+            if (queryParams != null)
+            {
+                foreach (var kvp in queryParams)
+                {
+                    query[kvp.Key] = kvp.Value;
+                }
+            }
+
+            uriBuilder.Query = query.ToString() ?? "";
+
+            return uriBuilder.ToString();
+        }
+
 
         private async Task GetTokenAsync()
         {

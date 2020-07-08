@@ -1,9 +1,9 @@
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
-namespace CloudCMS.Documents
+namespace CloudCMS
 {
-    public interface IDocument
+    public interface IDocument : ITypedID, IReferenceable
     {
         string Id { get; set; }
 

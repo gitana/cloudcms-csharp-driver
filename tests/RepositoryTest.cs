@@ -1,7 +1,6 @@
 using Xunit;
 using System.Collections.Generic;
-using CloudCMS.Repositories;
-using CloudCMS.Platforms;
+using CloudCMS;
 
 namespace CloudCMS.Tests
 {
@@ -21,6 +20,9 @@ namespace CloudCMS.Tests
 
             IRepository repository = await platform.CreateRepositoryAsync();
             Assert.Equal("/repositories/" + repository.Id, repository.URI);
+
+            string expectedRef = "repository://" + repository.PlatformId + "/" + repository.Id;
+            Assert.Equal(expectedRef, repository.Ref.Ref);
 
             IRepository repositoryRead = await platform.ReadRepositoryAsync(repository.Id);
             Assert.Equal(repository.Data, repositoryRead.Data);
