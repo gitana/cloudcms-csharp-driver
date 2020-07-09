@@ -2,6 +2,7 @@ using Xunit;
 using System.Threading;
 using System.Linq;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using CloudCMS;
@@ -66,7 +67,7 @@ namespace CloudCMS.Tests
         }
 
         [Fact]
-        public async void TestNodeQueryFind()
+        public async void TestNodeQuerySearchFind()
         {
             IBranch branch = await Fixture.Repository.ReadBranchAsync("master");
 
@@ -114,6 +115,13 @@ namespace CloudCMS.Tests
             Assert.Contains(node1.Id, findNodesIds);
             Assert.Contains(node2.Id, findNodesIds);
             
+            // search
+            List<IBaseNode> searchNodes = await branch.SearchNodesAsync("burger");
+            var searchNodesIds = searchNodes.Select(node => node.Id);
+            Assert.Equal(2, searchNodes.Count);
+            Assert.Contains(node1.Id, searchNodesIds);
+            Assert.Contains(node2.Id, searchNodesIds);
+
             await node1.DeleteAsync();
             await node2.DeleteAsync();
             await node3.DeleteAsync();

@@ -19,7 +19,7 @@ namespace CloudCMS.Tests
         {
             JObject obj = new JObject();
             obj["title"] = "C# Driver Test Repository";
-            Repository = await Platform.CreateRepositoryAsync();
+            Repository = await Platform.CreateRepositoryAsync(obj);
         }
 
         

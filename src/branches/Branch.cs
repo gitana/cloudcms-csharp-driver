@@ -80,6 +80,50 @@ namespace CloudCMS
             return nodes;
         }
 
+        public async Task<List<IBaseNode>> SearchNodesAsync(string text, JObject pagination = null)
+        {
+            string uri = URI + "/nodes/search";
+            
+            IDictionary<string, string> queryParams = new Dictionary<string, string>();
+            if (pagination != null)
+            {
+                queryParams = pagination.ToObject<Dictionary<string, string>>();
+            }
+            
+            queryParams.Add("text", text);
+
+            JObject response = await Driver.GetAsync(uri, queryParams);
+
+            return NodeUtil.NodeList(response, this);
+        }
+
+        public async Task<List<IBaseNode>> SearchNodesAsync(JObject search, JObject pagination = null)
+        {
+            string uri = URI + "/nodes/search";
+            
+            IDictionary<string, string> queryParams = new Dictionary<string, string>();
+            if (pagination != null)
+            {
+                queryParams = pagination.ToObject<Dictionary<string, string>>();
+            }
+
+            JObject payload = null;
+            if (search.ContainsKey("search"))
+            {
+                payload = search;
+            }
+            else
+            {
+                payload = new JObject();
+                payload.Add("search", search);
+            }
+            
+            HttpContent content = new StringContent(payload.ToString());
+            JObject response = await Driver.PostAsync(uri, queryParams, content);
+
+            return NodeUtil.NodeList(response, this);
+        }
+
         public async Task<List<IBaseNode>> FindNodesAsync(JObject config, JObject pagination = null)
         {
             string uri = this.URI + "/nodes/find";

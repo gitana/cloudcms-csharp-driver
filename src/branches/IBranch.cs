@@ -12,6 +12,9 @@ namespace CloudCMS
         Task<IBaseNode> ReadNodeAsync(string nodeId);
 
         Task<List<IBaseNode>> QueryNodesAsync(JObject query, JObject pagination = null);
+        
+        Task<List<IBaseNode>> SearchNodesAsync(string text, JObject pagination = null);
+        Task<List<IBaseNode>> SearchNodesAsync(JObject search, JObject pagination = null);
 
         Task<List<IBaseNode>> FindNodesAsync(JObject config, JObject pagination = null);
 
