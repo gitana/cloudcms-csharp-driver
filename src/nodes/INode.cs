@@ -15,14 +15,18 @@ namespace CloudCMS
         Task<List<IAssociation>> AssociationsAsync(QName associationTypeQName);
         Task<List<IAssociation>> AssociationsAsync(QName associationTypeQName, Direction direction, JObject pagination);
 
-        Task<Association> AssociateAsync(INode targetNode, QName associationTypeQName);
-        Task<Association> AssociateAsync(INode targetNode, QName associationTypeQName, JObject data);
-        Task<Association> AssociateAsync(INode otherNode, QName associationTypeQName, Directionality directionality);
-        Task<Association> AssociateAsync(INode otherNode, QName associationTypeQName, Directionality directionality, JObject data);
+        Task<IAssociation> AssociateAsync(INode targetNode, QName associationTypeQName);
+        Task<IAssociation> AssociateAsync(INode targetNode, QName associationTypeQName, JObject data);
+        Task<IAssociation> AssociateAsync(INode otherNode, QName associationTypeQName, Directionality directionality);
+        Task<IAssociation> AssociateAsync(INode otherNode, QName associationTypeQName, Directionality directionality, JObject data);
 
         Task UnassociateAsync(INode targetNode, QName associationTypeQName);
         Task UnassociateAsync(INode targetNode, QName associationTypeQName, Directionality directionality);
+
+        Task<IAssociation> AssociateOfAsync(INode sourceNode, QName associationTypeQName, JObject data=null);
+        Task<IAssociation> ChildOfAsync(INode sourceNode);
         
+
         // File Folder
         Task<JObject> FileFolderTreeAsync();
         Task<JObject> FileFolderTreeAsync(string basePath);

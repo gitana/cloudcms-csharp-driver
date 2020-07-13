@@ -12,7 +12,7 @@ using CloudCMS;
 
 namespace CloudCMS
 {
-    public class CloudCMSDriver
+    public class CloudCMSDriver : ICloudCMSDriver
     {
         // Static connection methods
 

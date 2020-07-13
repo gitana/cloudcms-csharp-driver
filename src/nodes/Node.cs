@@ -61,22 +61,22 @@ namespace CloudCMS
             return associations;
         }
 
-        public async Task<Association> AssociateAsync(INode targetNode, QName associationTypeQName)
+        public async Task<IAssociation> AssociateAsync(INode targetNode, QName associationTypeQName)
         {
             return await AssociateAsync(targetNode, associationTypeQName, Directionality.DIRECTED, null);
         }
 
-        public async Task<Association> AssociateAsync(INode targetNode, QName associationTypeQName, JObject data)
+        public async Task<IAssociation> AssociateAsync(INode targetNode, QName associationTypeQName, JObject data)
         {
             return await AssociateAsync(targetNode, associationTypeQName, Directionality.DIRECTED, data);
         }
 
-        public async Task<Association> AssociateAsync(INode otherNode, QName associationTypeQName, Directionality directionality)
+        public async Task<IAssociation> AssociateAsync(INode otherNode, QName associationTypeQName, Directionality directionality)
         {
             return await AssociateAsync(otherNode, associationTypeQName, directionality, null);
         }
 
-        public async Task<Association> AssociateAsync(INode otherNode, QName associationTypeQName, Directionality directionality, JObject data)
+        public async Task<IAssociation> AssociateAsync(INode otherNode, QName associationTypeQName, Directionality directionality, JObject data)
         {
             if (data == null)
             {
@@ -121,6 +121,16 @@ namespace CloudCMS
             }
             
             return Driver.PostAsync(uri, queryParams);
+        }
+
+        public Task<IAssociation> AssociateOfAsync(INode sourceNode, QName associationTypeQName, JObject data = null)
+        {
+            return sourceNode.AssociateAsync(this, associationTypeQName, Directionality.DIRECTED, data);
+        }
+
+        public Task<IAssociation> ChildOfAsync(INode sourceNode)
+        {
+            return AssociateOfAsync(sourceNode, QName.create("a:child"));
         }
 
         public Task<JObject> FileFolderTreeAsync()

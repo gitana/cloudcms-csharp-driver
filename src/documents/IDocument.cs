@@ -9,7 +9,7 @@ namespace CloudCMS
 
         JObject Data { get; set; }
 
-        CloudCMSDriver Driver { get; }
+        ICloudCMSDriver Driver { get; }
 
         string URI { get; }
 

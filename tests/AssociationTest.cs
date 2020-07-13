@@ -22,12 +22,12 @@ namespace CloudCMS.Tests
             INode node1 = (INode) await master.CreateNodeAsync(nodeObj1);
             
             JObject nodeObj2 = new JObject(
-                new JProperty("title", "Node1")
+                new JProperty("title", "Node2")
             );
             INode node2 = (INode) await master.CreateNodeAsync(nodeObj2);
             
             JObject nodeObj3 = new JObject(
-                new JProperty("title", "Node1")
+                new JProperty("title", "Node3")
             );
             INode node3 = (INode) await master.CreateNodeAsync(nodeObj3);
             
@@ -75,6 +75,31 @@ namespace CloudCMS.Tests
             
             allAssociations = await node1.AssociationsAsync();
             Assert.Single(allAssociations); // will include a has_role association
+        }
+
+        [Fact]
+        public async void TestChildOf()
+        {
+            IBranch master = await Fixture.Repository.MasterAsync();
+            
+            JObject nodeObj1 = new JObject(
+                new JProperty("title", "Node1")
+            );
+            INode node1 = (INode) await master.CreateNodeAsync(nodeObj1);
+            
+            JObject nodeObj2 = new JObject(
+                new JProperty("title", "Node2")
+            );
+            INode node2 = (INode) await master.CreateNodeAsync(nodeObj2);
+
+            IAssociation association = await node1.ChildOfAsync(node2);
+            Assert.NotNull(association);
+            Assert.Equal(Directionality.DIRECTED, association.Directionality);
+            
+            INode source = await association.ReadSourceNodeAsync();
+            Assert.Equal(node2.Id, source.Id);
+            INode target = await association.ReadTargetNodeAsync();
+            Assert.Equal(node1.Id, target.Id);
         }
     }
 }

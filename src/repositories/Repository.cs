@@ -10,7 +10,7 @@ namespace CloudCMS
     {
         public string PlatformId { get; }
 
-        public Repository(CloudCMSDriver driver, JObject obj) : base(driver, obj)
+        public Repository(ICloudCMSDriver driver, JObject obj) : base(driver, obj)
         {
             this.PlatformId = obj.SelectToken("platformId").ToString();
         }

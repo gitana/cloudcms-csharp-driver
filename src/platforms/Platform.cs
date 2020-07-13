@@ -9,7 +9,7 @@ namespace CloudCMS
     class Platform : AbstractDocument,
                      IPlatform
     {
-        public Platform(CloudCMSDriver driver, JObject obj) : base(driver, obj)
+        public Platform(ICloudCMSDriver driver, JObject obj) : base(driver, obj)
         {
 
         }

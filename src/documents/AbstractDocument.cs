@@ -12,9 +12,9 @@ namespace CloudCMS
 
         public abstract string URI { get; }
 
-        public CloudCMSDriver Driver { get; }
+        public ICloudCMSDriver Driver { get; }
 
-        protected AbstractDocument(CloudCMSDriver driver, JObject obj)
+        protected AbstractDocument(ICloudCMSDriver driver, JObject obj)
         {
             this.Driver = driver;
             this.Id = obj.GetValue("_doc").ToString();
