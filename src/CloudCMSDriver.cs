@@ -179,11 +179,6 @@ namespace CloudCMS
         {
             HttpResponseMessage response = await _requestAsync(uri, method, queryParams, body);
             string responseString = await response.Content.ReadAsStringAsync();
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new CloudCMSRequestException(responseString);
-            }
-
             return JObject.Parse(responseString);
         }
 
@@ -208,6 +203,12 @@ namespace CloudCMS
                 client.DefaultRequestHeaders.Authorization = auth;
 
                 HttpResponseMessage response = await client.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    throw new CloudCMSRequestException(responseString);
+                }
+                
                 return response;
             }
         }
