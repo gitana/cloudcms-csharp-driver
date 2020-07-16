@@ -51,7 +51,7 @@ namespace CloudCMS
             try
             {
                 JObject response = await Driver.GetAsync(uri);
-                node = new Node(this, response);
+                node = NodeUtil.Node(response, this);
             }
             catch (CloudCMSRequestException)
             {
