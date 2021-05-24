@@ -181,6 +181,13 @@ namespace CloudCMS
             string responseString = await response.Content.ReadAsStringAsync();
             return JObject.Parse(responseString);
         }
+        
+        public async Task<string> RequestStringAsync(string uri, HttpMethod method, IDictionary<string, string> queryParams = null, HttpContent body = null)
+        {
+            HttpResponseMessage response = await _requestAsync(uri, method, queryParams, body);
+            string responseString = await response.Content.ReadAsStringAsync();
+            return responseString;
+        }
 
         private async Task<HttpResponseMessage> _requestAsync(string uri, HttpMethod method, IDictionary<string, string> queryParams = null, HttpContent body = null)
         {

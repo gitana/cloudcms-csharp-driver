@@ -23,7 +23,8 @@ namespace CloudCMS
 
         Task<INode> RootNodeAsync();
         
-        // Definitions
-        
+        Task<JObject> GraphqlQuery(string query, string operationName=null, IDictionary<string, string> variables=null);
+
+        Task<string> GraphqlSchema();
     }
 }

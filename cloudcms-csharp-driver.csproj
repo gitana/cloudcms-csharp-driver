@@ -6,7 +6,7 @@
     <RootNamespace>CloudCMS</RootNamespace>
 
     <PackageId>cloudcms</PackageId>
-    <PackageVersion>1.1.4</PackageVersion>
+    <PackageVersion>1.1.5</PackageVersion>
     <Title>CloudCMS Driver</Title>
     <Description>C# .NET driver for CloudCMS</Description>
     <Summary>C# .NET driver for CloudCMS</Summary>

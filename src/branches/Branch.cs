@@ -211,5 +211,35 @@ namespace CloudCMS
         {
             return (INode) await ReadNodeAsync("root");
         }
+
+        public async Task<JObject> GraphqlQuery(string query, string operationName = null, IDictionary<string, string> variables = null)
+        {
+            string uri = this.URI + "/graphql";
+
+            IDictionary<string, string> queryParams = new Dictionary<string, string>();
+            queryParams.Add("query", query);
+
+            if (operationName != null)
+            {
+                queryParams.Add("operationName", operationName);
+            }
+
+            if (variables != null)
+            {
+                foreach (var kvp in variables)
+                {
+                    queryParams.Add(kvp.Key, kvp.Value);
+                }
+            }
+
+            JObject response = await Driver.GetAsync(uri, queryParams);
+            return response;
+        }
+
+        public Task<string> GraphqlSchema()
+        {
+            string uri = this.URI + "/graphql/schema";
+            return Driver.RequestStringAsync(uri, HttpMethod.Get);
+        }
     }
 }
