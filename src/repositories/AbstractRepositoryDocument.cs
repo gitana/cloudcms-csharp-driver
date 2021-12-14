@@ -3,7 +3,7 @@ using CloudCMS;
 
 namespace CloudCMS
 {
-    public abstract class AbstractRepositoryDocument : AbstractDocument,
+    public abstract class AbstractRepositoryDocument : AbstractPlatformDocument,
                                                 IRepositoryDocument
     {
         public IRepository Repository { get; }
@@ -12,7 +12,7 @@ namespace CloudCMS
         public string PlatformId { get; }
 
         protected AbstractRepositoryDocument(IRepository repository, JObject obj)
-            : base(repository.Driver, obj)
+            : base(repository.Platform, obj)
         {
             this.Repository = repository;
             this.RepositoryId = repository.Id;

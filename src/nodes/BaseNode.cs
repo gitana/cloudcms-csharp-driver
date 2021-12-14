@@ -118,6 +118,62 @@ namespace CloudCMS
             await ReloadAsync();
         }
 
+        public async Task<IBaseNode> ReadVersionAsync(string changesetId, JObject options = null)
+        {
+            string uri = URI + "/versions/" + changesetId;
+            
+            IDictionary<string, string> queryParams = null;
+            if (options != null)
+            {
+                queryParams = options.ToObject<Dictionary<string, string>>();
+            }
+            
+            JObject response = await Driver.GetAsync(uri, queryParams);
+            IBaseNode node = NodeUtil.Node(response, Branch);
+
+            return node;
+        }
+
+        public async Task<List<IBaseNode>> ListVersionsAsync(JObject options = null, JObject pagination = null)
+        {
+            string uri = URI + "/versions/";
+
+            IDictionary<string, string> queryParams = new Dictionary<string, string>();
+            if (options != null)
+            {
+                queryParams.AddAll(options.ToObject<Dictionary<string, string>>());
+            }
+
+            if (pagination != null)
+            {
+                queryParams.AddAll(pagination.ToObject<Dictionary<string, string>>());
+            }
+
+            JObject response = await Driver.GetAsync(uri, queryParams);
+            JArray nodeArray = (JArray) response.SelectToken("rows");
+            List<IBaseNode> nodes = NodeUtil.NodeList(nodeArray, Branch);
+
+            return nodes;
+        }
+
+        public async Task<IBaseNode> RestoreVersionAsync(string changesetId)
+        {
+            string uri = URI + "/versions/" + changesetId + "/restore";
+            JObject response = await Driver.PostAsync(uri, new Dictionary<string, string>(), new JObject());
+            IBaseNode node = NodeUtil.Node(response, Branch);
+
+            return node;
+        }
+
+        public async Task ChangeQNameAsync(QName newQName)
+        {
+            string uri = URI + "/change_qname";
+            IDictionary<string, string> queryParams = new Dictionary<string, string>();
+            queryParams.Add("qname", newQName.ToString());
+
+            await Driver.PostAsync(uri, queryParams, new JObject());
+        }
+
         public string GetString(string field)
         {
             return this.Data[field] != null ? (string) this.Data[field] : null;

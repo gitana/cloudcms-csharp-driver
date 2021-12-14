@@ -22,6 +22,13 @@ namespace CloudCMS
         bool HasFeature(string featureId);
         Task AddFeatureAsync(string featureId, JObject featureConfig);
         Task RemoveFeatureAsync(string featureId);
+        
+        // Versions
+        Task<IBaseNode> ReadVersionAsync(string changesetId, JObject options = null);
+        Task<List<IBaseNode>> ListVersionsAsync(JObject options = null, JObject pagination = null);
+        Task<IBaseNode> RestoreVersionAsync(string changesetId);
+
+        Task ChangeQNameAsync(QName newQName);
 
         
         string GetString(string field);

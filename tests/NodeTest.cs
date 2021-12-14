@@ -19,7 +19,8 @@ namespace CloudCMS.Tests
 
         private async Task<INode> createFile(IBranch branch, INode parent, string filename, bool isFolder)
         {
-            INode node = (INode) await branch.CreateNodeAsync();
+            JObject nodeObj = new JObject(new JProperty("title", filename));
+            INode node = (INode) await branch.CreateNodeAsync(nodeObj);
             JObject fileObj = new JObject();
             fileObj.Add("filename", filename);
             await node.AddFeatureAsync("f:filename", fileObj);
@@ -27,9 +28,6 @@ namespace CloudCMS.Tests
             {
                 await node.AddFeatureAsync("f:container", new JObject());
             }
-
-            node.SetString("title", filename);
-            await node.UpdateAsync();
 
             await parent.AssociateAsync(node, QName.create("a:child"), Directionality.DIRECTED);
 
@@ -190,6 +188,15 @@ namespace CloudCMS.Tests
             
             Assert.Equal(2, results.Nodes.Count);
             Assert.Equal(2, results.Associations.Count);
+            
+            JObject paths = await file5.ResolvePathsAsync();
+            Assert.True(paths.Count > 0);
+            
+            // test path resolves 
+            string path = await file5.ResolvePathAsync();
+            Assert.Equal("/folder1/folder2/file5", path);
+
+            
         }
 
         [Fact]
@@ -218,5 +225,50 @@ namespace CloudCMS.Tests
             INode translation = await node.ReadTranslationAsync("es_MX", "1.0");
             Assert.Equal("spanish1", translation.GetString("title"));
         }
+
+        [Fact]
+        public async void TestChangeQName()
+        {
+            IBranch master = await Fixture.Repository.MasterAsync();
+            JObject nodeObj = new JObject(
+                new JProperty("_type", "n:node"),
+                new JProperty("title", "Test Node")
+            );
+
+            IBaseNode node = await master.CreateNodeAsync(nodeObj);
+            await node.ChangeQNameAsync(QName.create("o:blah"));
+            await node.ReloadAsync();
+
+            QName newQName = node.QName;
+            Assert.Equal("o:blah", newQName.ToString());
+        }
+
+        [Fact]
+        public async void TestVersions()
+        {
+            IBranch master = await Fixture.Repository.MasterAsync();
+            JObject nodeObj = new JObject(
+                new JProperty("title", "Test Node")
+            );
+            
+            IBaseNode node = await master.CreateNodeAsync(nodeObj);
+            string firstChangeset = node.Data.SelectToken("_system.changeset").ToString();
+            node.Data["title"] = "new stuff";
+            await node.UpdateAsync();
+            await node.ReloadAsync();
+            Assert.Equal("new stuff", node.Data.GetValue("title").ToString());
+
+            List<IBaseNode> versions = await node.ListVersionsAsync();
+            Assert.Equal(2, versions.Count);
+
+            IBaseNode firstVersion = await node.ReadVersionAsync(firstChangeset);
+            Assert.Equal("Test Node", firstVersion.Data["title"].ToString());
+
+            IBaseNode restoredVersion = await node.RestoreVersionAsync(firstChangeset);
+            Assert.Equal("Test Node", restoredVersion.Data["title"].ToString());
+
+        }
+        
+        
     }
 }

@@ -212,7 +212,7 @@ namespace CloudCMS
             return (INode) await ReadNodeAsync("root");
         }
 
-        public async Task<JObject> GraphqlQuery(string query, string operationName = null, IDictionary<string, string> variables = null)
+        public async Task<JObject> GraphqlQueryAsync(string query, string operationName = null, IDictionary<string, string> variables = null)
         {
             string uri = this.URI + "/graphql";
 
@@ -236,10 +236,22 @@ namespace CloudCMS
             return response;
         }
 
-        public Task<string> GraphqlSchema()
+        public Task<string> GraphqlSchemaAsync()
         {
             string uri = this.URI + "/graphql/schema";
             return Driver.RequestStringAsync(uri, HttpMethod.Get);
+        }
+
+        public async Task<IJob> StartResetAsync(string changesetId)
+        {
+            string uri = URI + "/reset/start";
+            IDictionary<string, string> queryParams = new Dictionary<string, string>();
+            queryParams.Add("id", changesetId);
+
+            JObject response = await Driver.PostAsync(uri, queryParams, new JObject());
+            string jobId = response.GetValue("_doc").ToString();
+
+            return await Platform.ReadJobAsync(jobId);
         }
     }
 }

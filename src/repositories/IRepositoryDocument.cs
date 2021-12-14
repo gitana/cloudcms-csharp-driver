@@ -2,7 +2,7 @@ using CloudCMS;
 
 namespace CloudCMS
 {
-    public interface IRepositoryDocument : IDocument
+    public interface IRepositoryDocument : IPlatformDocument
     {
         IRepository Repository { get; }
 

@@ -15,11 +15,11 @@ namespace CloudCMS.Tests
         {
             IBranch branch = await Fixture.Repository.ReadBranchAsync("master");
 
-            string schema = await branch.GraphqlSchema();
+            string schema = await branch.GraphqlSchemaAsync();
             Assert.NotNull(schema);
 
             string query = "query { n_nodes { title } }";
-            JObject result = await branch.GraphqlQuery(query);
+            JObject result = await branch.GraphqlQueryAsync(query);
             Assert.NotNull(result);
         }
     }

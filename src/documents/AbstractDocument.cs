@@ -37,8 +37,5 @@ namespace CloudCMS
             HttpContent content = new StringContent(Data.ToString());
             await Driver.PutAsync(URI, body: content);
         }
-
-        public abstract string TypeId { get; }
-        public abstract Reference Ref { get; }
     }
 }

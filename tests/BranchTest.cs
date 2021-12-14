@@ -1,6 +1,7 @@
 using Xunit;
 using System.Collections.Generic;
 using CloudCMS;
+using Newtonsoft.Json.Linq;
 
 namespace CloudCMS.Tests
 {
@@ -17,6 +18,9 @@ namespace CloudCMS.Tests
             IRepository repository = Fixture.Repository;
             List<IBranch> branches = await repository.ListBranchesAsync();
             Assert.True(branches.Count > 0);
+
+            List<IBranch> queriedBranches = await repository.QueryBranchesAsync(new JObject());
+            Assert.NotEmpty(queriedBranches);
 
             IBranch branch = await repository.ReadBranchAsync("master");
             string expectedRef = "branch://" + repository.PlatformId + "/" + repository.Id + "/" + branch.Id;

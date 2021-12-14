@@ -238,6 +238,24 @@ namespace CloudCMS
             return NodeUtil.NodeList(response, Branch);
         }
 
+        public async Task<string> ResolvePathAsync()
+        {
+            string uri = URI + "/path";
+            var queryParams = new Dictionary<string, string>();
+            // queryParams.Add("rootNodeId", "r:root");
+
+            JObject response = await Driver.GetAsync(uri, queryParams);
+            return response.GetValue("path").ToString();
+        }
+
+        public async Task<JObject> ResolvePathsAsync()
+        {
+            string uri = URI + "/paths";
+            JObject response = await Driver.GetAsync(uri);
+
+            return (JObject) response.GetValue("paths");
+        }
+
         public async Task<TraversalResults> TraverseAsync(JObject traverse)
         {
             JObject config = new JObject();

@@ -37,6 +37,11 @@ namespace CloudCMS
         Task<List<IBaseNode>> ListChildrenAsync(JObject pagination=null);
         Task<List<IBaseNode>> ListRelativesAsync(QName type, Direction direction, JObject pagination=null);
         Task<List<IBaseNode>> QueryRelativesAsync(QName type, Direction direction, JObject query, JObject pagination=null);
+        
+        // Paths
+
+        Task<string> ResolvePathAsync();
+        Task<JObject> ResolvePathsAsync();
 
         // Traverse
         Task<TraversalResults> TraverseAsync(JObject traverse);

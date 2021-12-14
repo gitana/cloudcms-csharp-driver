@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace CloudCMS
 {
-    public interface IDocument : ITypedID, IReferenceable
+    public interface IDocument
     {
         string Id { get; set; }
 

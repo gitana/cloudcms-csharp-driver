@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using CloudCMS;
@@ -105,10 +106,22 @@ namespace CloudCMS
             return await RequestAsync(uri, method, queryParams, body);
         }
 
+        public Task<JObject> PostAsync(string uri, IDictionary<string, string> queryParams, JObject body)
+        {
+            HttpContent content = new StringContent(body.ToString());
+            return PostAsync(uri, queryParams, content);
+        }
+
         public async Task<JObject> PutAsync(string uri, IDictionary<string, string> queryParams = null, HttpContent body = null)
         {
             HttpMethod method = HttpMethod.Put;
             return await RequestAsync(uri, method, queryParams, body);
+        }
+
+        public Task<JObject> PutAsync(string uri, IDictionary<string, string> queryParams, JObject body)
+        {
+            HttpContent content = new StringContent(body.ToString());
+            return PutAsync(uri, queryParams, content);
         }
 
         public async Task<JObject> DeleteAsync(string uri, IDictionary<string, string> queryParams = null)
@@ -148,6 +161,14 @@ namespace CloudCMS
             HttpContent content = GenerateUploadContent(payloads);
             await _requestAsync(uri, HttpMethod.Post, paramMap, content);
         }
+
+        public async Task<IPlatform> ReadCurrentPlatform()
+        {
+            string uri = "/";
+            JObject response = await GetAsync(uri);
+            IPlatform result = new Platform(this, response);
+            return result;
+        }
         
         private HttpContent GenerateUploadContent(byte[] bytes, string mimetype)
         {
@@ -179,7 +200,13 @@ namespace CloudCMS
         {
             HttpResponseMessage response = await _requestAsync(uri, method, queryParams, body);
             string responseString = await response.Content.ReadAsStringAsync();
-            return JObject.Parse(responseString);
+            JObject result = JObject.Parse(responseString);
+
+            if (result.ContainsKey("error"))
+            {
+                throw new CloudCMSException("whoa");
+            }
+            return result;
         }
         
         public async Task<string> RequestStringAsync(string uri, HttpMethod method, IDictionary<string, string> queryParams = null, HttpContent body = null)
@@ -210,6 +237,17 @@ namespace CloudCMS
                 client.DefaultRequestHeaders.Authorization = auth;
 
                 HttpResponseMessage response = await client.SendAsync(request);
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    // Refresh and retry
+                    await RefreshTokenAsync();
+                    auth = new AuthenticationHeaderValue(token.token_type, token.access_token);
+                    client.DefaultRequestHeaders.Authorization = auth;
+                    
+                    request =  new HttpRequestMessage(method, url);
+                    response = await client.SendAsync(request);
+                }
+                    
                 if (!response.IsSuccessStatusCode)
                 {
                     string responseString = await response.Content.ReadAsStringAsync();
@@ -229,6 +267,11 @@ namespace CloudCMS
             if (query["full"] == null)
             {
                 query["full"] = "true";
+            }
+
+            if (query["metadata"] == null)
+            {
+                query["metadata"] = "true";
             }
 
             // Add all params to query string
